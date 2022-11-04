@@ -3,57 +3,34 @@ import {Phonebook} from './Phonebook/Phonebook'
 import { nanoid } from 'nanoid';
 import { Filter } from './Filter/Filter';
 import {ContactList} from './ContactList/ContactList';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, changeFilter, deleteContact } from 'redux/PhonebookRedax/reducer.Phonbook';
 
 
 export const App = () => {
-  const [filter, setFilter] = useState('');
-  const [contacts, setContacts] = useState(() => {
-    const getContact = localStorage.getItem('contacts');
-    if (getContact) {
-      return JSON.parse(getContact)
-    }
-    return []
-  });
-  
-   useEffect(() => {
-   localStorage.setItem('contacts', JSON.stringify(contacts))
-    }, [contacts])
+  const contacts = useSelector(state => state.contacts.contacts);
+  const filter = useSelector(state => state.contacts.filter);
 
-  // componentDidMount() {
-  //   const getContact = localStorage.getItem('contacts');
-  //   const parseContact = JSON.parse(getContact);
-  //   if (parseContact) {
-  //     this.setState({ contacts: parseContact })
-  //   }
-  // }
-
-  //   componentDidUpdate(_, prevState) {
-  //   if (this.state.contacts !== prevState.contacts)
-  //     localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-  // }
-
+  const dispatch = useDispatch();
   const handleDeleteUser = id => {
-    setContacts(contacts => {
-      return  contacts.filter(item => item.id !== id) ;
-    });
-  };
+    dispatch(deleteContact(id))
+    };
 
+ 
   const handleFilteerConnect = () => {
     return contacts.filter(elem => elem.name.toLowerCase().includes(filter.toLowerCase()));
 }
   
   const onChangeName = (e) => {
-    setFilter( e.target.value );
-   
+     dispatch(changeFilter(e.target.value))
   }
   const handleSubmit = (name, number) => {
    if (contacts.some(contact => contact.name === name)) {
       return alert(`${name} is already in contacts`);
     }
-      setContacts(prevContacts => {
-      return [...prevContacts, { name, number, id: nanoid() }]
-      });
+    dispatch(addContact({ name, number, id: nanoid() }))
+    
   };
  
    return (
