@@ -3,7 +3,6 @@ import {Phonebook} from './Phonebook/Phonebook'
 import { nanoid } from 'nanoid';
 import { Filter } from './Filter/Filter';
 import {ContactList} from './ContactList/ContactList';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact, changeFilter, deleteContact } from 'redux/PhonebookRedax/reducer.Phonbook';
 
